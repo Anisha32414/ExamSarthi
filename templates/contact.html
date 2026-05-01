@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - ExamSarthi{% endblock %}
+
+{% block content %}
+<div class="page-card">
+    <div class="page-header">
+        <h2>Contact Us</h2>
+        <p>Have questions or suggestions? Send us a message and we'll get back to you soon.</p>
+        <p class="small-note">This form sends messages through the website's mail account. You only provide your contact email and message — never your email password.</p>
+    </div>
+
+    {% if message_sent %}
+    <div class="result-box">
+        <h3>Message Sent</h3>
+        <p>Thank you for reaching out! Your response is received and any problem of yours will be resolved within 48 hours.</p>
+    </div>
+    {% endif %}
+
+    {% if error_text %}
+    <div class="warn-box">
+        <p>{{ error_text }}</p>
+    </div>
+    {% endif %}
+
+    {% if fallback_saved %}
+    <div class="warn-box">
+        <p>Your message has been saved locally because email sending is not configured. It will still be reviewed and sent once SMTP is set up.</p>
+    </div>
+    {% endif %}
+
+    <form method="post" class="contact-form">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" placeholder="Subject" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="6" placeholder="Write your message here..." required></textarea>
+
+        <button type="submit">Send Message</button>
+        <p class="small-note">Your response is received. Any problem will be solved within 48 hours.</p>
+    </form>
+</div>
+{% endblock %}

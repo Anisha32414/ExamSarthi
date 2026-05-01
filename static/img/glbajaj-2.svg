@@ -1,0 +1,17 @@
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#39CCCC" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="#001f3f" rx="40"/>
+  <rect x="100" y="120" width="600" height="120" fill="url(#grad2)" rx="20"/>
+  <rect x="110" y="260" width="180" height="120" fill="#39CCCC" rx="16"/>
+  <rect x="310" y="220" width="260" height="160" fill="#ffffff" rx="16"/>
+  <rect x="610" y="240" width="80" height="120" fill="#39CCCC" rx="16"/>
+  <circle cx="150" cy="345" r="18" fill="#f8f9fa"/>
+  <path d="M530 410 Q570 360 610 410" stroke="#ffffff" stroke-width="8" fill="none"/>
+  <text x="120" y="75" fill="#ffffff" font-family="Arial, sans-serif" font-size="32">Campus View</text>
+  <text x="120" y="110" fill="#d8f7ff" font-family="Arial, sans-serif" font-size="20">Engineering learning spaces</text>
+</svg>

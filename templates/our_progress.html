@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Progress - ExamSarthi{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Our Progress</h2>
+    <p>Explore site performance and download statistics for ExamSarthi.</p>
+</div>
+
+<div class="progress-grid">
+    <div class="stat-card">
+        <h3>Visitors</h3>
+        <p>{{ stats.visits }}</p>
+        <span>Unique visits to the site</span>
+    </div>
+    <div class="stat-card">
+        <h3>Downloads This Week</h3>
+        <p>{{ stats.downloads_this_week }}</p>
+        <span>Downloads in the current week</span>
+    </div>
+    <div class="stat-card">
+        <h3>Downloads Last Week</h3>
+        <p>{{ stats.downloads_last_week }}</p>
+        <span>Downloads in the previous week</span>
+    </div>
+    <div class="stat-card">
+        <h3>Downloads Last Month</h3>
+        <p>{{ stats.downloads_last_month }}</p>
+        <span>Downloads over the last month</span>
+    </div>
+</div>
+
+<div class="charts-section">
+    <div class="chart-card">
+        <h3>Downloads Comparison</h3>
+        <div class="bar-chart">
+            <div class="bar" style="--value:{{ stats.downloads_last_week }}; --max:{{ stats.downloads_last_month }};"><span>Last Week</span></div>
+            <div class="bar" style="--value:{{ stats.downloads_this_week }}; --max:{{ stats.downloads_last_month }};"><span>This Week</span></div>
+            <div class="bar" style="--value:{{ stats.downloads_last_month }}; --max:{{ stats.downloads_last_month }};"><span>Last Month</span></div>
+        </div>
+    </div>
+    <div class="chart-card">
+        <h3>Download Sources</h3>
+        <div class="pie-chart" style="--a:{{ stats.download_sources.Web }}; --b:{{ stats.download_sources.Direct }}; --c:{{ stats.download_sources.Social }};"></div>
+        <div class="legend">
+            <span><strong>Web</strong> — {{ stats.download_sources.Web }}%</span>
+            <span><strong>Direct</strong> — {{ stats.download_sources.Direct }}%</span>
+            <span><strong>Social</strong> — {{ stats.download_sources.Social }}%</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

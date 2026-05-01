@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Study Material - ExamSarthi{% endblock %}
+
+{% block content %}
+<div class="page-card">
+    <h2>Study Material Search</h2>
+    <p>Select your year and semester to find focused resources including subject playlists and note websites.</p>
+
+    <form method="post" id="study-form">
+        <label for="year">Year:</label>
+    <select name="year" id="year" required>
+        <option value="">Select Year</option>
+        <option value="1" {% if year == '1' %}selected{% endif %}>1st Year</option>
+        <option value="2" {% if year == '2' %}selected{% endif %}>2nd Year</option>
+        <option value="3" {% if year == '3' %}selected{% endif %}>3rd Year</option>
+        <option value="4" {% if year == '4' %}selected{% endif %}>4th Year</option>
+    </select>
+
+    <label for="sem">Semester:</label>
+    <select name="sem" id="sem" data-selected="{{ sem }}" required>
+        <option value="">Select Semester</option>
+    </select>
+
+    <label for="subj">Subject:</label>
+    <select name="subj" id="subj" required>
+        <option value="">Select Subject</option>
+        <option value="Mathematics" {% if subj == 'Mathematics' %}selected{% endif %}>Mathematics</option>
+        <option value="Physics" {% if subj == 'Physics' %}selected{% endif %}>Physics</option>
+        <option value="Chemistry" {% if subj == 'Chemistry' %}selected{% endif %}>Chemistry</option>
+        <option value="Programming" {% if subj == 'Programming' %}selected{% endif %}>Programming</option>
+        <option value="Data Structures" {% if subj == 'Data Structures' %}selected{% endif %}>Data Structures</option>
+        <option value="Algorithms" {% if subj == 'Algorithms' %}selected{% endif %}>Algorithms</option>
+        <option value="Database" {% if subj == 'Database' %}selected{% endif %}>Database</option>
+        <option value="Operating Systems" {% if subj == 'Operating Systems' %}selected{% endif %}>Operating Systems</option>
+        <option value="Computer Networks" {% if subj == 'Computer Networks' %}selected{% endif %}>Computer Networks</option>
+        <option value="Software Engineering" {% if subj == 'Software Engineering' %}selected{% endif %}>Software Engineering</option>
+        <option value="Machine Learning" {% if subj == 'Machine Learning' %}selected{% endif %}>Machine Learning</option>
+        <option value="AI" {% if subj == 'AI' %}selected{% endif %}>AI</option>
+        <option value="Project Management" {% if subj == 'Project Management' %}selected{% endif %}>Project Management</option>
+    </select>
+
+    <button type="submit">Find Resources</button>
+</form>
+
+{% if playlists or websites %}
+<div class="result-box">
+    <h3>Available Resources</h3>
+    {% if playlists %}
+    <div>
+        <h4>YouTube Playlists</h4>
+        <ul>
+            {% for pl in playlists %}
+            <li><a href="{{ pl }}" target="_blank">{{ pl }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% if websites %}
+    <div>
+        <h4>Websites for Notes</h4>
+        <ul>
+            {% for site in websites %}
+            <li><a href="{{ site }}" target="_blank">{{ site }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    </div>
+    {% endif %}
+
+    {% if not playlists and not websites and request.method == 'POST' %}
+    <div class="warn-box">
+        <p>No resources were found for the selected year, semester, and subject. Please try a different combination.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

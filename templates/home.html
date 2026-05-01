@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - ExamSarthi{% endblock %}
+
+{% block content %}
+<div class="slideshow-container" id="slideshow">
+    <div class="slideshow-inner">
+        {% for i in range(1, 11) %}
+        <div class="slide">
+            <img src="{{ url_for('static', filename='img/slide-' ~ i ~ '.svg') }}" alt="GL Bajaj slide {{ i }}">
+        </div>
+        {% endfor %}
+        {% for i in range(1, 11) %}
+        <div class="slide">
+            <img src="{{ url_for('static', filename='img/slide-' ~ i ~ '.svg') }}" alt="GL Bajaj slide {{ i }}">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="hero full-width-hero">
+    <div class="hero-text">
+        <h2>GL Bajaj College of Engineering and Technology</h2>
+        <p>Located in Greater Noida, GL Bajaj is one of the leading engineering colleges offering strong academic support, industrial exposure, and focused exam preparation resources for engineering students.</p>
+        <div class="info-section">
+            <h3>Why GL Bajaj is great for exam success</h3>
+            <ul>
+                <li>Offers B.Tech programs in Computer Science, Electronics, Mechanical, and more.</li>
+                <li>Campus facilities include modern labs, libraries, and a large digital resource center.</li>
+                <li>Strong placement and training support from campus recruiters and industry partners.</li>
+                <li>Excellent faculty guidance and subject-specific study material for engineering exams.</li>
+            </ul>
+        </div>
+        <p>Use the pages below to find subject resources, previous papers, and support for your exam preparation.</p>
+        <div class="hero-actions">
+            <a class="cta-button" href="/study-material">Go to Study Material</a>
+            <a class="cta-button" href="/pyq">Go to PYQ</a>
+            <a class="cta-button" href="/contact">Contact Us</a>
+        </div>
+    </div>
+    <div class="hero-images">
+        <div class="college-card">
+            <img class="college-image" src="{{ url_for('static', filename='img/glbajaj-1.svg') }}" alt="GL Bajaj College campus image">
+            <p class="caption">GL Bajaj campus, Greater Noida.</p>
+        </div>
+        <div class="college-card">
+            <img class="college-image" src="{{ url_for('static', filename='img/glbajaj-2.svg') }}" alt="GL Bajaj campus view">
+            <p class="caption">Campus facilities and infrastructure.</p>
+        </div>
+    </div>
+</div>
+
+<div class="college-cards">
+    <div class="college-card">
+        <h3>Academic focus</h3>
+        <p>GL Bajaj emphasizes practical learning with lab sessions, project work, and industrial training to help students perform better in exams and placements.</p>
+    </div>
+    <div class="college-card">
+        <h3>Exam support</h3>
+        <p>The college encourages students to use curated playlists, question banks, and previous year papers to strengthen their preparation.</p>
+    </div>
+    <div class="college-card">
+        <h3>Student resources</h3>
+        <p>Access study notes, practice questions, and expert guidance for each semester and engineering subject to maximize your exam readiness.</p>
+    </div>
+</div>
+{% endblock %}

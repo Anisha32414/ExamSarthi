@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}PYQ - ExamSarthi{% endblock %}
+
+{% block content %}
+<div class="page-card">
+    <h2>Previous Year Question Papers</h2>
+    <p>Search for previous year question papers by year and subject.</p>
+
+    <form method="post">
+        <label for="year">Year:</label>
+        <select name="year" id="year" required>
+            <option value="">Select Year</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+        </select>
+
+        <label for="subj">Subject:</label>
+        <select name="subj" id="subj" required>
+            <option value="">Select Subject</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Programming">Programming</option>
+            <option value="Data Structures">Data Structures</option>
+            <option value="Algorithms">Algorithms</option>
+            <option value="Database">Database</option>
+            <option value="Operating Systems">Operating Systems</option>
+            <option value="Computer Networks">Computer Networks</option>
+            <option value="Software Engineering">Software Engineering</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="AI">AI</option>
+            <option value="Project Management">Project Management</option>
+        </select>
+
+        <button type="submit">Search</button>
+    </form>
+
+    {% if papers %}
+    <div class="result-box">
+        <h3>Question Papers:</h3>
+        <ul>
+            {% for paper in papers %}
+            <li><a href="{{ paper }}" target="_blank">{{ paper }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if not papers and request.method == 'POST' %}
+    <div class="warn-box">
+        <p>No question papers found for the selected criteria. Please try different options.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

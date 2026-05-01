@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ExamSarthi{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="brand-wrap">
+                <h1 class="brand-title">Exam<span>Sarthi</span></h1>
+                <p class="brand-subtitle">Your exam companion for engineering success</p>
+            </div>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/study-material">Study Material</a>
+                <a href="/pyq">PYQ</a>
+                <a href="/our-progress">Our Progress</a>
+                <a href="/contact">Contact Us</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2026 ExamSarthi. Helping Engineering Students Ace Exams.</p>
+    </footer>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
