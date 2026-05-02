@@ -3,24 +3,10 @@
 {% block title %}Home - ExamSarthi{% endblock %}
 
 {% block content %}
-<div class="slideshow-container" id="slideshow">
-    <div class="slideshow-inner">
-        {% for i in range(1, 11) %}
-        <div class="slide">
-            <img src="{{ url_for('static', filename='img/slide-' ~ i ~ '.svg') }}" alt="GL Bajaj slide {{ i }}">
-        </div>
-        {% endfor %}
-        {% for i in range(1, 11) %}
-        <div class="slide">
-            <img src="{{ url_for('static', filename='img/slide-' ~ i ~ '.svg') }}" alt="GL Bajaj slide {{ i }}">
-        </div>
-        {% endfor %}
-    </div>
-</div>
 <div class="hero full-width-hero">
     <div class="hero-text">
-        <h2>GL Bajaj College of Engineering and Technology</h2>
-        <p>Located in Greater Noida, GL Bajaj is one of the leading engineering colleges offering strong academic support, industrial exposure, and focused exam preparation resources for engineering students.</p>
+        <h2>GL Bajaj Institute of Technology And Management</h2>
+        <p>GL Bajaj Institute of Technology & Management (GLBITM), popularly known as GL Bajaj, is located in Greater Noida. It is one of the top engineering and management college in Delhi NCR.</p>
         <div class="info-section">
             <h3>Why GL Bajaj is great for exam success</h3>
             <ul>
@@ -35,16 +21,19 @@
             <a class="cta-button" href="/study-material">Go to Study Material</a>
             <a class="cta-button" href="/pyq">Go to PYQ</a>
             <a class="cta-button" href="/contact">Contact Us</a>
+            <a class="cta-button" href="https://glbg.servergi.com:8072/ISIMGLB/Login?ReturnUrl=%2fISIMGLB%2fHome" target="_blank">ERP SIM</a>
+            <a class="cta-button" href="https://www.glbitm.org" target="_blank">Official Site</a>
+            <a class="cta-button" href="https://play.google.com/store/apps/details?id=com.giindia.myconnect&pcampaignid=web_share" target="_blank">G6-Connect App</a>
         </div>
     </div>
     <div class="hero-images">
         <div class="college-card">
-            <img class="college-image" src="{{ url_for('static', filename='img/glbajaj-1.svg') }}" alt="GL Bajaj College campus image">
-            <p class="caption">GL Bajaj campus, Greater Noida.</p>
+            <img class="college-image" src="{{ url_for('static', filename='img/glbajaj-1.png') }}" alt="GL Bajaj College campus image">
+            <p class="caption">GL Bajaj Institute of Technology And Management</p>
         </div>
         <div class="college-card">
-            <img class="college-image" src="{{ url_for('static', filename='img/glbajaj-2.svg') }}" alt="GL Bajaj campus view">
-            <p class="caption">Campus facilities and infrastructure.</p>
+            <img class="college-image" src="{{ url_for('static', filename='img/glbajaj-2.png') }}" alt="GL Bajaj campus view">
+            <p class="caption">GLBITM, Greater Noida</p>
         </div>
     </div>
 </div>
