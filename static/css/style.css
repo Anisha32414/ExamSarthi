@@ -131,6 +131,15 @@ select {
     transition: border-color 0.25s ease;
 }
 
+select {
+    color: #ffffff;
+}
+
+select option {
+    color: #000000;
+    background-color: #ffffff;
+}
+
 input[type="text"]:focus,
 input[type="email"]:focus,
 textarea:focus,
