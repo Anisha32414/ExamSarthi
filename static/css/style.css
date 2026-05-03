@@ -437,15 +437,24 @@ h2, h3 {
 .charts-section {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-top: 1.75rem;
+    align-items: start;
 }
 
 .chart-card {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 20px;
-    padding: 1.5rem;
+    padding: 1rem;
+    width: 100%;
+    min-width: 0;
+}
+
+.chart-card canvas {
+    width: 100% !important;
+    height: 320px !important;
+    margin-top: 0.75rem;
 }
 
 .bar-chart {

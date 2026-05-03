@@ -1,4 +1,6 @@
 import os
+import json
+import threading
 import smtplib
 import datetime
 from email.message import EmailMessage
@@ -13,6 +15,82 @@ except ImportError:
 app = Flask(__name__)
 
 CONTACT_RECIPIENT = os.environ.get('CONTACT_RECIPIENT', 'anisharawat324@gmail.com')
+
+PROGRESS_DATA_FILE = os.path.join(os.path.dirname(__file__), 'progress_data.json')
+PROGRESS_LOCK = threading.Lock()
+DEFAULT_PROGRESS_DATA = {
+    'base_visits': 1280,
+    'current_visits': 0,
+    'downloads': {
+        'base_this_week': 420,
+        'base_last_week': 380,
+        'base_last_month': 1700,
+        'current_this_week': 0,
+        'current_last_week': 0,
+        'current_last_month': 0
+    },
+    'download_sources': {
+        'Web': 55,
+        'Direct': 25,
+        'Social': 20
+    },
+    'subject_traffic': {
+        'Mathematics': 28,
+        'Physics': 22,
+        'Chemistry': 18,
+        'Programming': 15,
+        'Other': 17
+    },
+    'weekly_progress': [
+        {'label': 'Week 1', 'downloads': 320},
+        {'label': 'Week 2', 'downloads': 350},
+        {'label': 'Week 3', 'downloads': 380},
+        {'label': 'Week 4', 'downloads': 420},
+        {'label': 'Week 5', 'downloads': 450},
+        {'label': 'Week 6', 'downloads': 480},
+        {'label': 'Week 7', 'downloads': 500},
+        {'label': 'This Week', 'downloads': 520}
+    ]
+}
+
+def load_progress_data():
+    try:
+        with open(PROGRESS_DATA_FILE, 'r', encoding='utf-8') as progress_file:
+            return json.load(progress_file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {
+            'base_visits': DEFAULT_PROGRESS_DATA['base_visits'],
+            'current_visits': 0,
+            'downloads': DEFAULT_PROGRESS_DATA['downloads'].copy(),
+            'download_sources': DEFAULT_PROGRESS_DATA['download_sources'].copy(),
+            'subject_traffic': DEFAULT_PROGRESS_DATA['subject_traffic'].copy(),
+            'weekly_progress': [item.copy() for item in DEFAULT_PROGRESS_DATA['weekly_progress']]
+        }
+        save_progress_data(data)
+        return data
+
+
+def save_progress_data(data):
+    with PROGRESS_LOCK:
+        temp_file = PROGRESS_DATA_FILE + '.tmp'
+        with open(temp_file, 'w', encoding='utf-8') as progress_file:
+            json.dump(data, progress_file, indent=2)
+        os.replace(temp_file, PROGRESS_DATA_FILE)
+
+
+@app.before_request
+def track_visitor():
+    if request.method != 'GET':
+        return
+    endpoint = request.endpoint
+    if endpoint is None or endpoint == 'static':
+        return
+    try:
+        data = load_progress_data()
+        data['current_visits'] = data.get('current_visits', 0) + 1
+        save_progress_data(data)
+    except Exception:
+        pass
 
 
 def send_contact_email(name, sender_email, subject, message_text):
@@ -245,18 +323,29 @@ def contact():
 
 @app.route('/our-progress')
 def our_progress():
+    data = load_progress_data()
+    downloads = data.get('downloads', {})
     stats = {
-        'visits': 1280,
-        'downloads_last_week': 420,
-        'downloads_this_week': 640,
-        'downloads_last_month': 1750,
-        'download_sources': {
-            'Web': 55,
-            'Direct': 25,
-            'Social': 20
-        }
+        'visits': data.get('base_visits', 0) + data.get('current_visits', 0),
+        'downloads_this_week': downloads.get('base_this_week', 0) + downloads.get('current_this_week', 0),
+        'downloads_last_week': downloads.get('base_last_week', 0) + downloads.get('current_last_week', 0),
+        'downloads_last_month': downloads.get('base_last_month', 0) + downloads.get('current_last_month', 0),
+        'download_sources': data.get('download_sources', DEFAULT_PROGRESS_DATA['download_sources']),
+        'subject_traffic': data.get('subject_traffic', DEFAULT_PROGRESS_DATA['subject_traffic']),
+        'weekly_progress': data.get('weekly_progress', DEFAULT_PROGRESS_DATA['weekly_progress'])
     }
-    return render_template('our_progress.html', stats=stats)
+    weekly_labels = [week.get('label', '') for week in stats['weekly_progress']]
+    weekly_values = [week.get('downloads', 0) for week in stats['weekly_progress']]
+    subject_labels = list(stats['subject_traffic'].keys())
+    subject_values = list(stats['subject_traffic'].values())
+    return render_template(
+        'our_progress.html',
+        stats=stats,
+        weekly_labels=weekly_labels,
+        weekly_values=weekly_values,
+        subject_labels=subject_labels,
+        subject_values=subject_values
+    )
 
 @app.route('/pyq', methods=['GET', 'POST'])
 def pyq():

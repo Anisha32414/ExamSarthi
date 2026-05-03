@@ -1,0 +1,51 @@
+{
+  "base_visits": 1280,
+  "current_visits": 12,
+  "downloads": {
+    "base_this_week": 420,
+    "base_last_week": 380,
+    "base_last_month": 1700,
+    "current_this_week": 0,
+    "current_last_week": 0,
+    "current_last_month": 0
+  },
+  "download_sources": {
+    "Web": 55,
+    "Direct": 25,
+    "Social": 20
+  },
+  "weekly_progress": [
+    {
+      "label": "Week 1",
+      "downloads": 320
+    },
+    {
+      "label": "Week 2",
+      "downloads": 350
+    },
+    {
+      "label": "Week 3",
+      "downloads": 380
+    },
+    {
+      "label": "Week 4",
+      "downloads": 420
+    },
+    {
+      "label": "Week 5",
+      "downloads": 450
+    },
+    {
+      "label": "Week 6",
+      "downloads": 480
+    },
+    {
+      "label": "Week 7",
+      "downloads": 500
+    },
+    {
+      "label": "This Week",
+      "downloads": 520
+    }
+  ]
+}

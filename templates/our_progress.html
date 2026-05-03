@@ -33,21 +33,146 @@
 
 <div class="charts-section">
     <div class="chart-card">
-        <h3>Downloads Comparison</h3>
-        <div class="bar-chart">
-            <div class="bar" style="--value:{{ stats.downloads_last_week }}; --max:{{ stats.downloads_last_month }};"><span>Last Week</span></div>
-            <div class="bar" style="--value:{{ stats.downloads_this_week }}; --max:{{ stats.downloads_last_month }};"><span>This Week</span></div>
-            <div class="bar" style="--value:{{ stats.downloads_last_month }}; --max:{{ stats.downloads_last_month }};"><span>Last Month</span></div>
-        </div>
+        <h3>Weekly Downloads Trend</h3>
+        <canvas id="progressChart"></canvas>
     </div>
     <div class="chart-card">
-        <h3>Download Sources</h3>
-        <div class="pie-chart" style="--a:{{ stats.download_sources.Web }}; --b:{{ stats.download_sources.Direct }}; --c:{{ stats.download_sources.Social }};"></div>
-        <div class="legend">
-            <span><strong>Web</strong> — {{ stats.download_sources.Web }}%</span>
-            <span><strong>Direct</strong> — {{ stats.download_sources.Direct }}%</span>
-            <span><strong>Social</strong> — {{ stats.download_sources.Social }}%</span>
-        </div>
+        <h3>Subject Traffic Share</h3>
+        <canvas id="subjectTrafficChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Download Source Breakdown</h3>
+        <canvas id="sourceTrafficChart"></canvas>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ weekly_labels|tojson }};
+    const values = {{ weekly_values|tojson }};
+    const subjectLabels = {{ subject_labels|tojson }};
+    const subjectValues = {{ subject_values|tojson }};
+    const ctx = document.getElementById('progressChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Downloads',
+                data: values,
+                fill: false,
+                borderColor: '#B8860B',
+                backgroundColor: '#FFD700',
+                tension: 0.3,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    ticks: { color: '#ffffff' },
+                    grid: { color: 'rgba(255,255,255,0.12)' }
+                },
+                y: {
+                    beginAtZero: false,
+                    ticks: { color: '#ffffff' },
+                    grid: { color: 'rgba(255,255,255,0.12)' }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: { color: '#ffffff' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.y + ' downloads';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const sourceData = {{ stats.download_sources|tojson }};
+    const sourceLabels = Object.keys(sourceData);
+    const sourceValues = Object.values(sourceData);
+    const pieCtx = document.getElementById('subjectTrafficChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: subjectLabels,
+            datasets: [{
+                data: subjectValues,
+                backgroundColor: ['#B8860B', '#FFB347', '#87CEEB', '#90EE90', '#D2691E'],
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#ffffff' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const sourceCtx = document.getElementById('sourceTrafficChart').getContext('2d');
+    new Chart(sourceCtx, {
+        type: 'bar',
+        data: {
+            labels: sourceLabels,
+            datasets: [{
+                label: 'Traffic %',
+                data: sourceValues,
+                backgroundColor: ['#FFD700', '#FFA500', '#87CEEB'],
+                borderColor: '#ffffff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    ticks: { color: '#ffffff' },
+                    grid: { color: 'rgba(255,255,255,0.08)' }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: '#ffffff' },
+                    grid: { color: 'rgba(255,255,255,0.08)' }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: { color: '#ffffff' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.y + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}
