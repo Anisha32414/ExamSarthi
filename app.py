@@ -4,17 +4,23 @@ import threading
 import smtplib
 import datetime
 from email.message import EmailMessage
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
+import googleapiclient.discovery
 
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass
+# Load environment variables from .env file
+from dotenv import load_dotenv
+env_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path=env_path)
 
 app = Flask(__name__)
 
+# Debug: Print loaded environment
+print(f"DEBUG: .env file path: {env_path}")
+print(f"DEBUG: GOOGLE_API_KEY loaded: {bool(os.environ.get('GOOGLE_API_KEY'))}")
+print(f"DEBUG: GOOGLE_API_KEY value: {os.environ.get('GOOGLE_API_KEY')}")
+
 CONTACT_RECIPIENT = os.environ.get('CONTACT_RECIPIENT', 'anisharawat324@gmail.com')
+ROOT_FOLDER_ID = '1-tXGUSeXXurQkyU7jxzJGuDEdQK9C1bA'
 
 PROGRESS_DATA_FILE = os.path.join(os.path.dirname(__file__), 'progress_data.json')
 PROGRESS_LOCK = threading.Lock()
@@ -267,24 +273,125 @@ def get_pyq(year, subj):
     except KeyError:
         return []
 
+def get_drive_pdfs(year, subj):
+    api_key = os.environ.get('GOOGLE_API_KEY')
+    if not api_key or api_key == 'your-google-api-key-here':
+        print(f"DEBUG: API Key is not set or invalid. Key value: {api_key}")
+        return []
+    try:
+        print(f"DEBUG: Fetching PDFs for year: {year}, subject: {subj}")
+        service = googleapiclient.discovery.build('drive', 'v3', developerKey=api_key)
+        # Find year folder
+        year_query = f"name = '{year}' and mimeType = 'application/vnd.google-apps.folder' and '{ROOT_FOLDER_ID}' in parents"
+        year_results = service.files().list(q=year_query, fields="files(id)").execute()
+        year_folders = year_results.get('files', [])
+        if not year_folders:
+            print(f"DEBUG: No year folder found for '{year}'")
+            return []
+        year_folder_id = year_folders[0]['id']
+        # Find subject folder
+        subject_query = f"name = '{subj}' and mimeType = 'application/vnd.google-apps.folder' and '{year_folder_id}' in parents"
+        subject_results = service.files().list(q=subject_query, fields="files(id)").execute()
+        subject_folders = subject_results.get('files', [])
+        if not subject_folders:
+            print(f"DEBUG: No subject folder found for '{subj}' in year '{year}'")
+            return []
+        subject_folder_id = subject_folders[0]['id']
+        # List PDFs
+        pdf_query = f"mimeType = 'application/pdf' and '{subject_folder_id}' in parents"
+        pdf_results = service.files().list(q=pdf_query, fields="files(id, name)").execute()
+        pdfs = pdf_results.get('files', [])
+        print(f"DEBUG: PDFs found: {len(pdfs)}")
+        return [{'id': pdf['id'], 'name': pdf['name'], 'year': year, 'subject': subj} for pdf in pdfs]
+    except Exception as e:
+        print(f"ERROR fetching PDFs: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+def get_drive_subjects(year):
+    api_key = os.environ.get('GOOGLE_API_KEY')
+    if not api_key or api_key == 'your-google-api-key-here':
+        print(f"DEBUG: API Key is not set or invalid. Key value: {api_key}")
+        return []
+    try:
+        print(f"DEBUG: Fetching subjects for year: {year}")
+        service = googleapiclient.discovery.build('drive', 'v3', developerKey=api_key)
+        year_query = f"name = '{year}' and mimeType = 'application/vnd.google-apps.folder' and '{ROOT_FOLDER_ID}' in parents"
+        print(f"DEBUG: Year query: {year_query}")
+        year_results = service.files().list(q=year_query, fields="files(id)").execute()
+        year_folders = year_results.get('files', [])
+        print(f"DEBUG: Year folders found: {len(year_folders)}")
+        if not year_folders:
+            print(f"DEBUG: No year folder found for '{year}'")
+            return []
+        year_folder_id = year_folders[0]['id']
+        subject_query = f"mimeType = 'application/vnd.google-apps.folder' and '{year_folder_id}' in parents"
+        print(f"DEBUG: Subject query: {subject_query}")
+        subject_results = service.files().list(q=subject_query, fields="files(name)").execute()
+        subjects = [s['name'] for s in subject_results.get('files', [])]
+        print(f"DEBUG: Subjects found: {subjects}")
+        return subjects
+    except Exception as e:
+        print(f"ERROR fetching subjects: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+@app.route('/debug-drive')
+def debug_drive():
+    api_key = os.environ.get('GOOGLE_API_KEY')
+    if not api_key or api_key == 'your-google-api-key-here':
+        return f"API Key is not set. Current value: {api_key}"
+    
+    try:
+        service = googleapiclient.discovery.build('drive', 'v3', developerKey=api_key)
+        
+        # List all folders in the root
+        root_query = f"mimeType = 'application/vnd.google-apps.folder' and '{ROOT_FOLDER_ID}' in parents"
+        root_results = service.files().list(q=root_query, fields="files(name, id)").execute()
+        root_folders = root_results.get('files', [])
+        
+        debug_info = f"<h1>Drive Debug Info</h1>"
+        debug_info += f"<h2>Root Folder ID: {ROOT_FOLDER_ID}</h2>"
+        debug_info += f"<h2>Folders found in root: {len(root_folders)}</h2>"
+        debug_info += "<ul>"
+        for folder in root_folders:
+            debug_info += f"<li><strong>{folder['name']}</strong> (ID: {folder['id']})</li>"
+            
+            # List subfolders in each
+            subfolder_query = f"mimeType = 'application/vnd.google-apps.folder' and '{folder['id']}' in parents"
+            subfolder_results = service.files().list(q=subfolder_query, fields="files(name, id)").execute()
+            subfolders = subfolder_results.get('files', [])
+            debug_info += f"<ul><li>Subfolders: {len(subfolders)}"
+            for subfolder in subfolders:
+                debug_info += f"<li>{subfolder['name']}</li>"
+            debug_info += "</ul>"
+        debug_info += "</ul>"
+        
+        return debug_info
+    except Exception as e:
+        import traceback
+        return f"<h2>Error:</h2><pre>{str(e)}\n\n{traceback.format_exc()}</pre>"
+
 @app.route('/', methods=['GET'])
 def home():
     return render_template('home.html')
 
 @app.route('/study-material', methods=['GET', 'POST'])
 def study_material():
-    playlists = []
-    websites = []
+    pdfs = []
+    subjects = []
     year = ''
-    sem = ''
     subj = ''
     if request.method == 'POST':
         year = request.form.get('year')
-        sem = request.form.get('sem')
         subj = request.form.get('subj')
-        playlists = get_playlists(year, sem, subj)
-        websites = get_websites(year, sem, subj)
-    return render_template('study_material.html', playlists=playlists, websites=websites, year=year, sem=sem, subj=subj)
+        if year:
+            subjects = get_drive_subjects(year)
+        if subj:
+            pdfs = get_drive_pdfs(year, subj)
+    return render_template('study_material.html', pdfs=pdfs, subjects=subjects, year=year, subj=subj)
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -355,6 +462,20 @@ def pyq():
         subj = request.form.get('subj')
         papers = get_pyq(year, subj)
     return render_template('pyq.html', papers=papers)
+
+@app.route('/download/<file_id>')
+def download(file_id):
+    if not os.environ.get('GOOGLE_API_KEY') or os.environ.get('GOOGLE_API_KEY') == 'your-google-api-key-here':
+        return "API key not set", 500
+    # Increment download count
+    data = load_progress_data()
+    data['downloads']['current_this_week'] += 1
+    # Also increment total or other
+    save_progress_data(data)
+    # Get the download link
+    service = googleapiclient.discovery.build('drive', 'v3', developerKey=os.environ.get('GOOGLE_API_KEY'))
+    file = service.files().get(fileId=file_id, fields='webContentLink').execute()
+    return redirect(file['webContentLink'])
 
 if __name__ == '__main__':
     app.run(debug=True)

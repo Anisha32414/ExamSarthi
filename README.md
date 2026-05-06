@@ -19,8 +19,9 @@ An amazing website for engineering students to help with exam preparation.
 2. Create a virtual environment: `python -m venv .venv`
 3. Activate the virtual environment: `.venv\Scripts\activate` (Windows)
 4. Install Flask: `pip install flask`
+5. Install Google API client: `pip install google-api-python-client`
 6. (Optional) Install dotenv support: `pip install python-dotenv`
-7. Create a `.env` file using `.env.example` and set your SMTP credentials.
+7. Create a `.env` file using `.env.example` and set your SMTP and Google API credentials.
 8. Run the app: `python app.py`
 9. Open http://127.0.0.1:5000 in your browser.
 
@@ -48,6 +49,22 @@ CONTACT_RECIPIENT=your-email@gmail.com
 If SMTP is not configured, contact submissions are still saved locally to `contact_messages.log` so they are not lost.
 
 For Gmail, use an app password and keep `SMTP_USE_SSL=true`.
+
+## Google Drive API setup
+
+To enable the Study Material page with PDF downloads from Google Drive, you need a Google API key:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a new project or select an existing one.
+3. Enable the Google Drive API for your project.
+4. Create credentials: Go to "Credentials" > "Create Credentials" > "API Key".
+5. Copy the API key and add it to your `.env` file:
+
+```
+GOOGLE_API_KEY=your-actual-api-key-here
+```
+
+Make sure your Google Drive folder is public and the API key has read access to public files. The folder structure should be: Year folders > Subject folders > PDF files.
 
 ## Usage
 

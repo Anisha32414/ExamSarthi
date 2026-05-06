@@ -5,92 +5,61 @@
 {% block content %}
 <div class="page-card">
     <h2>Study Material Search</h2>
-    <p>Select your year and semester to find focused resources including subject playlists and note websites.</p>
+    <p>Select your year and subject to find PDFs from various platforms.</p>
 
     <form method="post" id="study-form">
         <label for="year">Year:</label>
     <select name="year" id="year" required>
         <option value="">Select Year</option>
-        <option value="1" {% if year == '1' %}selected{% endif %}>1st Year</option>
-        <option value="2" {% if year == '2' %}selected{% endif %}>2nd Year</option>
-        <option value="3" {% if year == '3' %}selected{% endif %}>3rd Year</option>
-        <option value="4" {% if year == '4' %}selected{% endif %}>4th Year</option>
-    </select>
-
-    <label for="sem">Semester:</label>
-    <select name="sem" id="sem" data-selected="{{ sem }}" required>
-        <option value="">Select Semester</option>
+        <option value="1st Year" {% if year == '1st Year' %}selected{% endif %}>1st Year</option>
+        <option value="2nd Year" {% if year == '2nd Year' %}selected{% endif %}>2nd Year</option>
+        <option value="3rd Year" {% if year == '3rd Year' %}selected{% endif %}>3rd Year</option>
+        <option value="4th Year" {% if year == '4th Year' %}selected{% endif %}>4th Year</option>
     </select>
 
     <label for="subj">Subject:</label>
     <select name="subj" id="subj" required>
         <option value="">Select Subject</option>
-        <option value="PPS" {% if subj == 'PPS' %}selected{% endif %}>PPS</option>
-        <option value="Chemistry" {% if subj == 'Chemistry' %}selected{% endif %}>Chemistry</option>
-        <option value="Physics" {% if subj == 'Physics' %}selected{% endif %}>Physics</option>
-        <option value="Maths-I" {% if subj == 'Maths-I' %}selected{% endif %}>Maths-I</option>
-        <option value="Maths-II" {% if subj == 'Maths-II' %}selected{% endif %}>Maths-II</option>
-        <option value="Maths-IV" {% if subj == 'Maths-IV' %}selected{% endif %}>Maths-IV</option>
-        <option value="Electrical Engineering" {% if subj == 'Electrical Engineering' %}selected{% endif %}>Electrical Engineering</option>
-        <option value="Electronic Engineering" {% if subj == 'Electronic Engineering' %}selected{% endif %}>Electronic Engineering</option>
-        <option value="Soft Skills" {% if subj == 'Soft Skills' %}selected{% endif %}>Soft Skills</option>
-        <option value="EVS" {% if subj == 'EVS' %}selected{% endif %}>EVS</option>
-        <option value="Mechanical" {% if subj == 'Mechanical' %}selected{% endif %}>Mechanical</option>
-        <option value="COA" {% if subj == 'COA' %}selected{% endif %}>COA</option>
-        <option value="Python" {% if subj == 'Python' %}selected{% endif %}>Python</option>
-        <option value="Technical Communication" {% if subj == 'Technical Communication' %}selected{% endif %}>Technical Communication</option>
-        <option value="DS" {% if subj == 'DS' %}selected{% endif %}>DS</option>
-        <option value="Digital Electronics" {% if subj == 'Digital Electronics' %}selected{% endif %}>Digital Electronics</option>
-        <option value="Cyber Security" {% if subj == 'Cyber Security' %}selected{% endif %}>Cyber Security</option>
-        <option value="Operating System" {% if subj == 'Operating System' %}selected{% endif %}>Operating System</option>
-        <option value="TAFL" {% if subj == 'TAFL' %}selected{% endif %}>TAFL</option>
-        <option value="OOPS" {% if subj == 'OOPS' %}selected{% endif %}>OOPS</option>
-        <option value="DAA" {% if subj == 'DAA' %}selected{% endif %}>DAA</option>
-        <option value="DBMS" {% if subj == 'DBMS' %}selected{% endif %}>DBMS</option>
-        <option value="OOSD" {% if subj == 'OOSD' %}selected{% endif %}>OOSD</option>
-        <option value="AI" {% if subj == 'AI' %}selected{% endif %}>AI</option>
-        <option value="Cloud Computing" {% if subj == 'Cloud Computing' %}selected{% endif %}>Cloud Computing</option>
-        <option value="Data Analytics" {% if subj == 'Data Analytics' %}selected{% endif %}>Data Analytics</option>
-        <option value="MLT" {% if subj == 'MLT' %}selected{% endif %}>MLT</option>
-        <option value="Computer Network" {% if subj == 'Computer Network' %}selected{% endif %}>Computer Network</option>
-        <option value="Software Engineering" {% if subj == 'Software Engineering' %}selected{% endif %}>Software Engineering</option>
-        <option value="DSTL" {% if subj == 'DSTL' %}selected{% endif %}>DSTL</option>
-        <option value="UHV" {% if subj == 'UHV' %}selected{% endif %}>UHV</option>
-        <option value="IBM" {% if subj == 'IBM' %}selected{% endif %}>IBM</option>
+        {% for subject in subjects %}
+        <option value="{{ subject }}" {% if subj == subject %}selected{% endif %}>{{ subject }}</option>
+        {% endfor %}
     </select>
 
-    <button type="submit">Find Resources</button>
+    <button type="submit">Find PDFs</button>
 </form>
 
-{% if playlists or websites %}
-<div class="result-box">
-    <h3>Available Resources</h3>
-    {% if playlists %}
-    <div>
-        <h4>YouTube Playlists</h4>
-        <ul>
-            {% for pl in playlists %}
-            <li><a href="{{ pl }}" target="_blank">{{ pl }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-    {% if websites %}
-    <div>
-        <h4>Websites for Notes</h4>
-        <ul>
-            {% for site in websites %}
-            <li><a href="{{ site }}" target="_blank">{{ site }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-    </div>
-    {% endif %}
+{% if year and not subjects %}
+<div class="warn-box">
+    <p>Unable to load subjects. Please ensure GOOGLE_API_KEY is set in .env file. See README for setup instructions.</p>
+</div>
+{% endif %}
 
-    {% if not playlists and not websites and request.method == 'POST' %}
+<script>
+document.getElementById('year').addEventListener('change', function() {
+    document.getElementById('subj').value = '';
+    document.getElementById('study-form').submit();
+});
+</script>
+
+{% if pdfs %}
+<div class="result-box">
+    <h3>Available PDFs</h3>
+    <div class="pdf-grid">
+        {% for pdf in pdfs %}
+        <div class="pdf-box">
+            <h4>{{ pdf.name }}</h4>
+            <p>Year: {{ pdf.year }}</p>
+            <p>Subject: {{ pdf.subject }}</p>
+            <a href="{{ url_for('download', file_id=pdf.id) }}" target="_blank" class="download-btn">Download</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+    {% if not pdfs and request.method == 'POST' %}
     <div class="warn-box">
-        <p>No resources were found for the selected year, semester, and subject. Please try a different combination.</p>
+        <p>No PDFs were found for the selected year and subject. Please try a different combination.</p>
     </div>
     {% endif %}
 </div>

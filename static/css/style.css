@@ -599,6 +599,47 @@ h2, h3 {
     margin-top: 1.5rem;
 }
 
+.pdf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 1rem;
+}
+
+.pdf-box {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pdf-box h4 {
+    margin-top: 0;
+    color: #B8860B;
+    font-size: 1.1rem;
+}
+
+.pdf-box p {
+    margin: 0.5rem 0;
+    color: #ffffff;
+}
+
+.download-btn {
+    display: inline-block;
+    background-color: #B8860B;
+    color: #800000;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.25s ease;
+}
+
+.download-btn:hover {
+    background-color: #a14a22;
+}
+
 .cta-button {
     display: inline-block;
     background-color: #B8860B;
