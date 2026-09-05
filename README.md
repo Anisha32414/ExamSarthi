@@ -1,6 +1,6 @@
 # 🎓 ExamSarthi
 
-ExamSarthi is a web-based platform designed to simplify exam preparation by providing students with quick and organized access to essential academic resources. It offers a clean and user-friendly interface to help students efficiently find study materials and prepare for examinations.
+ExamSarthi is a web-based platform designed to simplify exam preparation by providing students with quick and organized access to rivision resources. It offers a clean and user-friendly interface to help students efficiently find study materials and prepare for examinations last minute.
 
 ---
 
