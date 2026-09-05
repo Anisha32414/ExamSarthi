@@ -110,7 +110,6 @@ def send_contact_email(name, sender_email, subject, message_text):
     email_message.set_content(
         f'Name: {name}\nEmail: {sender_email}\nSubject: {subject}\n\nMessage:\n{message_text}'
     )
-
     smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
     smtp_port = int(os.environ.get('SMTP_PORT', 587))
     smtp_user = os.environ.get('SMTP_USER')
