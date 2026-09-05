@@ -462,7 +462,7 @@ h2, h3 {
 
 .chart-card canvas {
     width: 100% !important;
-    height: 320px !important;
+    height: 310px !important;
     margin-top: 0.75rem;
 }
 
@@ -544,7 +544,7 @@ h2, h3 {
 
 .hero-text {
     flex: 1;
-    min-width: 280px;
+    min-width: 285px;
 }
 
 .hero-images {
