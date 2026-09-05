@@ -64,6 +64,7 @@ def load_progress_data():
         with open(PROGRESS_DATA_FILE, 'r', encoding='utf-8') as progress_file:
             return json.load(progress_file)
     except (FileNotFoundError, json.JSONDecodeError):
+        
         data = {
             'base_visits': DEFAULT_PROGRESS_DATA['base_visits'],
             'current_visits': 0,
