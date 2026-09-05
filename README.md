@@ -31,9 +31,6 @@ ExamSarthi is a web-based platform designed to simplify exam preparation by prov
 
 ## 🚀 Future Enhancements
 
-* User authentication and profiles
-* Mock tests and quizzes
-* Progress tracking dashboard
 * Resource upload and management
 * Advanced search and filtering
 * Performance analytics
