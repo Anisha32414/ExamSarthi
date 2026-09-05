@@ -27,11 +27,6 @@ ExamSarthi is a web-based platform designed to simplify exam preparation by prov
 * Python
 * Flask
 
-### Version Control
-
-* Git
-* GitHub
-
 ---
 
 ## 🚀 Future Enhancements
