@@ -192,6 +192,7 @@ playlists_data = {
     }
 }
 
+
 # Mock data for websites: year -> semester -> subject -> list of website URLs for notes
 websites_data = {
     '1': {
